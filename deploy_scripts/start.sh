@@ -11,7 +11,7 @@ if [ -f "$JAR_FILE" ]; then
   sleep 10
 
   # Verify application is running
-  curl --silent --fail http://localhost:$PORT
+  curl --silent --fail http://localhost:$PORT/health
   if [ $? -eq 0 ]; then
     echo "Application started successfully and is accessible on port $PORT!"
   else
