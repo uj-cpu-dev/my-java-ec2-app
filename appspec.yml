@@ -7,7 +7,7 @@ env:
     VERSION: 1.0.0
 
 files:
-  - source: $APP_NAME-$VERSION.zip  # Reference the ZIP file as the source artifact
+  - source: /  # Reference the ZIP file as the source artifact
     destination: /home/ec2-user/app  # Destination for the ZIP file
 
 permissions:
@@ -23,7 +23,7 @@ permissions:
 
 hooks:
   BeforeInstall:
-    - location: /home/ec2-user/app/deploy_scripts/extract_and_set_permissions.sh  # Use the external script
+    - location: /home/ec2-user/app/deploy_scripts/check_java_version.sh  # Use the external script
       runas: ec2-user
 
   ApplicationStop:
