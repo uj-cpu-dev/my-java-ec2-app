@@ -1,0 +1,29 @@
+version: 0.0
+os: linux
+
+files:
+  - source: target/*.jar
+    destination: /home/ec2-user/app
+
+permissions:
+  - object: /home/ec2-user/app/*.jar
+    pattern: "**"
+    owner: ec2-user
+    group: ec2-user
+
+hooks:
+  BeforeInstall:
+    - location: deploy_scripts/check_java.sh
+      runas: ec2-user
+
+  ApplicationStop:
+    - location: deploy_scripts/stop.sh
+      runas: ec2-user
+
+  ApplicationStart:
+    - location: deploy_scripts/start.sh
+      runas: ec2-user
+
+  ValidateService:
+    - location: deploy_scripts/validate.sh
+      runas: ec2-user
