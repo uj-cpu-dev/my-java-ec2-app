@@ -1,1 +1,1 @@
-# my-java-ec2-app
+# my-java-ec2-app-v1
