@@ -11,29 +11,24 @@ files:
     destination: /home/ec2-user/app  # Destination for the ZIP file
 
 permissions:
-  - object: /home/ec2-user/app/deploy_scripts/*.sh  # Ensure scripts have proper permissions
-    pattern: "**"
-    owner: ec2-user
-    group: ec2-user
-
-  - object: /home/ec2-user/app/target/*.jar  # Ensure the JAR file has proper permissions
+  - object: /
     pattern: "**"
     owner: ec2-user
     group: ec2-user
 
 hooks:
   BeforeInstall:
-    - location: /home/ec2-user/app/deploy_scripts/check_java_version.sh  # Use the external script
+    - location: deploy_scripts/check_java_version.sh  # Use the external script
       runas: ec2-user
 
   ApplicationStop:
-    - location: /home/ec2-user/app/deploy_scripts/stop.sh
+    - location: deploy_scripts/stop.sh
       runas: ec2-user
 
   ApplicationStart:
-    - location: /home/ec2-user/app/deploy_scripts/start.sh
+    - location: deploy_scripts/start.sh
       runas: ec2-user
 
   ValidateService:
-    - location: /home/ec2-user/app/deploy_scripts/validate.sh
+    - location: deploy_scripts/validate.sh
       runas: ec2-user
