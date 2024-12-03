@@ -17,7 +17,9 @@ fi
 echo "Setting permissions for all deploy scripts..."
 chmod +x /home/ec2-user/app/deploy_scripts/*.sh
 
-# Ensure validate.sh is executable
+chmod 755 /home/ec2-user/app/deploy_scripts/check_java_version.sh
+chmod 755 /home/ec2-user/app/deploy_scripts/stop.sh
+chmod 755 /home/ec2-user/app/deploy_scripts/start.sh
 chmod 755 /home/ec2-user/app/deploy_scripts/validate.sh
 
 echo "All scripts are now executable."
