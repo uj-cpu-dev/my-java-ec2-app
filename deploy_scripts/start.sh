@@ -1,29 +1,27 @@
 #!/bin/bash
+# Script to start the Java application
 
-# Load environment variables
-source /home/ec2-user/.bash_profile
-
-# Change to the target directory where the JAR file is located
-cd /home/ec2-user/app/target
+JAR_FILE="/home/ec2-user/app/target/my-java-ec2-app-0.0.1-SNAPSHOT.jar"
+LOG_FILE="/home/ec2-user/app/app.log"
 
 # Check if the JAR file exists
-if [ -f "my-java-ec2-app-0.0.1-SNAPSHOT.jar" ]; then
-  echo "Starting the application..."
+if [ -f "$JAR_FILE" ]; then
+  echo "Found JAR file: $JAR_FILE. Starting the application..."
 
-  # Start the application in the background
-  nohup java -jar my-java-ec2-app-0.0.1-SNAPSHOT.jar > /home/ec2-user/app/app.log 2>&1 &
+  # Start the application in the background and redirect logs
+  nohup java -jar "$JAR_FILE" > "$LOG_FILE" 2>&1 &
 
   # Allow some time for the application to start
   sleep 10
 
-  # Check if the application is running on port 8080
+  # Check if the application is running on port 8080 (or your app's port)
   if curl --silent --fail http://localhost:8080; then
     echo "Application started successfully and is accessible!"
   else
-    echo "Application started but is not accessible. Check the logs for more details."
+    echo "Application failed to start or is not accessible. Check the logs at $LOG_FILE."
     exit 1
   fi
 else
-  echo "JAR file not found in /home/ec2-user/app/target."
+  echo "JAR file not found: $JAR_FILE. Cannot start application."
   exit 1
 fi
