@@ -1,32 +1,44 @@
 version: 0.0
 os: linux
 
+env:
+  variables:
+    APP_NAME: MyJavaEc2App
+    VERSION: 1.0.0
+
 files:
-  - source: target/*.jar
-    destination: /home/ec2-user/app
+  - source: $APP_NAME-$VERSION.zip  # Reference the ZIP file as the source artifact
+    destination: /home/ec2-user/app  # Destination for the ZIP file
 
 permissions:
-  - object: /home/ec2-user/app/*.jar
+  - object: /home/ec2-user/app/deploy_scripts/*.sh  # Ensure scripts have proper permissions
+    pattern: "**"
+    owner: ec2-user
+    group: ec2-user
+
+  - object: /home/ec2-user/app/target/*.jar  # Ensure the JAR file has proper permissions
     pattern: "**"
     owner: ec2-user
     group: ec2-user
 
 hooks:
   BeforeInstall:
-    - location: deploy_scripts/check_java.sh
-      runas: ec2-user
     - script: |
+        echo "Extracting application files..."
+        unzip -o /home/ec2-user/app/$APP_NAME-$VERSION.zip -d /home/ec2-user/app/
         chmod +x /home/ec2-user/app/deploy_scripts/*.sh
+        chmod 755 /home/ec2-user/app/target/*.jar  # Add execute permission to the JAR
+        echo "Files extracted and permissions set."
       runas: ec2-user
 
   ApplicationStop:
-    - location: deploy_scripts/stop.sh
+    - location: /home/ec2-user/app/deploy_scripts/stop.sh
       runas: ec2-user
 
   ApplicationStart:
-    - location: deploy_scripts/start.sh
+    - location: /home/ec2-user/app/deploy_scripts/start.sh
       runas: ec2-user
 
   ValidateService:
-    - location: deploy_scripts/validate.sh
+    - location: /home/ec2-user/app/deploy_scripts/validate.sh
       runas: ec2-user
