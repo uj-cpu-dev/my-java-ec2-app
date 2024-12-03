@@ -1,12 +1,16 @@
 #!/bin/bash
-# Example stop script to stop the application
 
-JAR_FILE="/home/ec2-user/app/target/my-java-ec2-app-0.0.1-SNAPSHOT.jar"
+# Load environment variables
+source /home/ec2-user/.bash_profile
 
-# Check if the JAR file exists
-if [ -f "$JAR_FILE" ]; then
-  echo "Found JAR file: $JAR_FILE. Stopping the application..."
-  pkill -f "java -jar $JAR_FILE"  # Stop the Java process running the JAR file
+# Find the process running the JAR file
+echo "Stopping the application..."
+pid=$(pgrep -f 'java -jar /home/ec2-user/app/target/my-java-ec2-app-0.0.1-SNAPSHOT.jar')
+
+if [ -n "$pid" ]; then
+  echo "Found process ID: $pid. Terminating..."
+  kill -9 $pid
+  echo "Application stopped successfully."
 else
-  echo "JAR file not found: $JAR_FILE. Cannot stop application."
+  echo "No running application process found."
 fi
