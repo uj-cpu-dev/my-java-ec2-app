@@ -23,12 +23,7 @@ permissions:
 
 hooks:
   BeforeInstall:
-    - script: |
-        echo "Extracting application files..."
-        unzip -o /home/ec2-user/app/$APP_NAME-$VERSION.zip -d /home/ec2-user/app/
-        chmod +x /home/ec2-user/app/deploy_scripts/*.sh
-        chmod 755 /home/ec2-user/app/target/*.jar  # Add execute permission to the JAR
-        echo "Files extracted and permissions set."
+    - location: /home/ec2-user/app/deploy_scripts/extract_and_set_permissions.sh  # Use the external script
       runas: ec2-user
 
   ApplicationStop:
