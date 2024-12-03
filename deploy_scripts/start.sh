@@ -1,24 +1,29 @@
 #!/bin/bash
-# Script to start the Java application
-
 JAR_FILE="/home/ec2-user/app/target/my-java-ec2-app-0.0.1-SNAPSHOT.jar"
 LOG_FILE="/home/ec2-user/app/app.log"
+PORT=8080
 
-# Check if the JAR file exists
+# Check if port is in use
+if sudo netstat -tuln | grep -q ":$PORT"; then
+  echo "Port $PORT is in use. Stopping the process..."
+  PID=$(sudo netstat -tuln | grep ":$PORT" | awk '{print $7}' | cut -d '/' -f 1)
+  sudo kill -9 "$PID"
+  echo "Stopped process $PID."
+fi
+
+# Start the application
 if [ -f "$JAR_FILE" ]; then
   echo "Found JAR file: $JAR_FILE. Starting the application..."
-
-  # Start the application in the background and redirect logs
   nohup java -jar "$JAR_FILE" > "$LOG_FILE" 2>&1 &
 
-  # Allow some time for the application to start
   sleep 10
 
-  # Check if the application is running on port 8080 (or your app's port)
-  if curl --silent --fail http://localhost:8080; then
-    echo "Application started successfully and is accessible!"
+  # Verify application is running
+  curl --silent --fail http://localhost:$PORT
+  if [ $? -eq 0 ]; then
+    echo "Application started successfully and is accessible on port $PORT!"
   else
-    echo "Application failed to start or is not accessible. Check the logs at $LOG_FILE."
+    echo "Application failed to start or is not accessible. Check logs at $LOG_FILE."
     exit 1
   fi
 else
