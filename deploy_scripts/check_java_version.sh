@@ -1,4 +1,6 @@
 #!/bin/bash
+PORT=8080
+
 
 # Check the Java version
 echo "Checking Java version..."
