@@ -15,6 +15,9 @@ hooks:
   BeforeInstall:
     - location: deploy_scripts/check_java.sh
       runas: ec2-user
+    - script: |
+        chmod +x /home/ec2-user/app/deploy_scripts/*.sh
+      runas: ec2-user
 
   ApplicationStop:
     - location: deploy_scripts/stop.sh
