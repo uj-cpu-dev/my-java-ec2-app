@@ -12,3 +12,12 @@ if [[ "$java_version" < "17" ]]; then
 else
   echo "Java version is $java_version. Proceeding with deployment..."
 fi
+
+# Make all deploy scripts executable
+echo "Setting permissions for all deploy scripts..."
+chmod +x /home/ec2-user/app/deploy_scripts/*.sh
+
+# Ensure validate.sh is executable
+chmod 755 /home/ec2-user/app/deploy_scripts/validate.sh
+
+echo "All scripts are now executable."
