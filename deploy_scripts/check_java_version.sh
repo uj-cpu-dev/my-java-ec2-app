@@ -18,6 +18,7 @@ fi
 # Make all deploy scripts executable
 echo "Setting permissions for all deploy scripts..."
 chmod +x /home/ec2-user/app/deploy_scripts/*.sh
+chmod +x deploy_scripts/*.sh
 
 chmod 755 /home/ec2-user/app/deploy_scripts/check_java_version.sh
 chmod 755 /home/ec2-user/app/deploy_scripts/stop.sh
