@@ -1,0 +1,13 @@
+name: Java CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  use-reusable-pipeline:
+    uses: github.com/uj-cpu-dev/deploy-to-aws-ecr/tree/main/.github/workflows/ci-cd.yml@main
