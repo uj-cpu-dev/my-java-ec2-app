@@ -10,4 +10,4 @@ on:
 
 jobs:
   use-reusable-pipeline:
-    uses: github.com/uj-cpu-dev/deploy-to-aws-ecr/tree/main/.github/workflows/ci-cd.yml@main
+    uses: https://github.com/uj-cpu-dev/deploy-to-aws-ecr/.github/workflows/ci-cd.yml
