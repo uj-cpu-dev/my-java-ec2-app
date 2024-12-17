@@ -9,5 +9,7 @@ on:
       - main
 
 jobs:
-  use-reusable-pipeline:
+  pipeline:
     uses: uj-cpu-dev/deploy-to-aws-ecr/.github/workflows/ci-cd.yml@main
+    with:
+      language: java
