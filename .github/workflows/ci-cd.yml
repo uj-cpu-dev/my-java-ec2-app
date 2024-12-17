@@ -8,6 +8,11 @@ on:
     branches:
       - main
 
+permissions:
+  actions: write
+  packages: write
+  id-token: write
+
 jobs:
   pipeline:
     uses: uj-cpu-dev/deploy-to-aws-ecr/.github/workflows/ci-cd.yml@main
