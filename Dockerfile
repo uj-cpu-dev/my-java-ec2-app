@@ -2,7 +2,7 @@
 ARG JAVA_VERSION=17
 
 # Use the Java version to build the base image
-FROM eclipse-temurin:${JAVA_VERSION}-jre-slim
+FROM eclipse-temurin:${JAVA_VERSION}-jdk
 
 # Set the working directory
 WORKDIR /app
