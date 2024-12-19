@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.my_java_ec2_app.my_java_ec2_app.MyJavaEc2AppApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.051 s -- in com.my_java_ec2_app.my_java_ec2_app.MyJavaEc2AppApplicationTests
