@@ -15,7 +15,7 @@ permissions:
   actions: write
 
 jobs:
-  pipeline:
+  jobs:
     uses: uj-cpu-dev/deploy-to-aws-ecr/.github/workflows/ci-cd.yml@main
     with:
       language: java
