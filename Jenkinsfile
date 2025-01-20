@@ -12,9 +12,9 @@ pipeline {
             steps {
                 echo "Setting the image tag..."
                 script {
-                    def branchName = env.BRANCH_NAME?.replace('/', '-') ?: "unknown-branch"
-                    def commitSHA = sh(script: "git rev-parse --short=6 HEAD", returnStdout: true).trim()
-                    env.IMAGE_TAG = "${branchName}-${commitSHA}"
+                    def gitCommitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                    def shortCommitHash = gitCommitHash.substring(0, 6) 
+                    env.IMAGE_TAG = "feature-branch-${shortCommitHash}"
                     echo "Image tag set to: ${env.IMAGE_TAG}"
                 }
             }
