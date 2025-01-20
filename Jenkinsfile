@@ -2,34 +2,13 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = 'us-east-1'        // e.g., us-east-1
-        REPO_NAME = 'my-java-app'       // Your ECR repository name
+        AWS_REGION = 'us-east-1' // e.g., us-east-1
+        REPO_NAME = 'my-java-app' // Your ECR repository name
         IMAGE_TAG = "${env.BUILD_NUMBER}" // Use build number as tag
         ECR_REGISTRY = "992382383822.dkr.ecr.${AWS_REGION}.amazonaws.com"
-        ROLE_ARN = 'arn:aws:iam::992382383822:role/jenkinsServerRole' // Replace with your Role ARN
-        ROLE_SESSION_NAME = 'jenkins-session'
     }
 
     stages {
-        stage('Assume IAM Role') {
-            steps {
-                echo "Assuming IAM role..."
-                script {
-                    def assumeRoleCommand = """
-                    aws sts assume-role \
-                    --role-arn ${ROLE_ARN} \
-                    --role-session-name ${ROLE_SESSION_NAME} \
-                    --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
-                    --output text
-                    """
-                    def credentials = sh(script: assumeRoleCommand, returnStdout: true).trim().split("\\s+")
-                    env.AWS_ACCESS_KEY_ID = credentials[0]
-                    env.AWS_SECRET_ACCESS_KEY = credentials[1]
-                    env.AWS_SESSION_TOKEN = credentials[2]
-                }
-            }
-        }
-
         stage('Checkout') {
             steps {
                 echo "Checking out code..."
@@ -39,7 +18,7 @@ pipeline {
 
         stage('Login to ECR') {
             steps {
-                echo "Logging in to Amazon ECR using assumed IAM role..."
+                echo "Logging in to Amazon ECR..."
                 script {
                     def ecrLogin = sh(script: "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}", returnStatus: true)
                     if (ecrLogin != 0) {
