@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    triggers {
-        githubPush()
-    }
-
     environment {
         AWS_REGION = 'us-east-1' // e.g., us-east-1
         REPO_NAME = 'my-java-app' // Your ECR repository name
