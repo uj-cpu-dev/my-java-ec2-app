@@ -4,11 +4,22 @@ pipeline {
     environment {
         AWS_REGION = 'us-east-1' // e.g., us-east-1
         REPO_NAME = 'my-java-app' // Your ECR repository name
-        IMAGE_TAG = "${env.BUILD_NUMBER}" // Use build number as tag
         ECR_REGISTRY = "992382383822.dkr.ecr.${AWS_REGION}.amazonaws.com"
     }
 
     stages {
+        stage('Set Image Tag') {
+            steps {
+                echo "Setting the image tag..."
+                script {
+                    def branchName = env.BRANCH_NAME?.replace('/', '-') ?: "unknown-branch"
+                    def commitSHA = sh(script: "git rev-parse --short=6 HEAD", returnStdout: true).trim()
+                    env.IMAGE_TAG = "${branchName}-${commitSHA}"
+                    echo "Image tag set to: ${env.IMAGE_TAG}"
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 echo "Checking out code..."
