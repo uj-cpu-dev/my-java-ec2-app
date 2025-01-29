@@ -14,7 +14,7 @@ pipeline {
         stage('Set Image Tag') {
             steps {
                 script {
-                    sh './scripts/set-image-tag.sh'
+                    sh './jenkins/scripts/set-image-tag.sh'
                     env.IMAGE_TAG = readFile('image-tag.txt').trim()
                     echo "Image tag set to: ${env.IMAGE_TAG}"
                 }
