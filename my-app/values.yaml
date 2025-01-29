@@ -102,6 +102,9 @@ volumeMounts: []
 
 nodeSelector: {}
 
-tolerations: []
+tolerations:
+  - key: "CriticalAddonsOnly"
+    operator: "Exists"
+    effect: "NoSchedule"
 
 affinity: {}

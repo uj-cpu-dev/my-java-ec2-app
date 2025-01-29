@@ -64,5 +64,6 @@ spec:
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
+        {{- if .Values.tolerations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
