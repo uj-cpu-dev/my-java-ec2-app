@@ -1,9 +1,9 @@
-FROM public.ecr.aws/amazoncorretto/amazoncorretto:17-al2023-jdk
+FROM openjdk:17-slim
 
 WORKDIR /app
 
 COPY target/*.jar app.jar
 
-EXPOSE 80
+EXPOSE 8080
 
 CMD ["java", "-jar", "/app/app.jar"]
