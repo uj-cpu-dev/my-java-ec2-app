@@ -1,8 +1,6 @@
-FROM debian:bullseye-slim
+FROM public.ecr.aws/amazoncorretto/amazoncorretto:17-al2023-jdk
 
 WORKDIR /app
-
-RUN apt-get update && apt-get install -y openjdk-17-jdk && rm -rf /var/lib/apt/lists/*
 
 COPY target/*.jar app.jar
 
