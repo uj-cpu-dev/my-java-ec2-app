@@ -64,8 +64,6 @@ spec:
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
-      - key: "CriticalAddonsOnly"
-        operator: "Exists"
-        effect: "NoSchedule"
-
-
+       {{- if .Values.tolerations }}
+         {{- toYaml . | nindent 8 }}
+       {{- end }}
