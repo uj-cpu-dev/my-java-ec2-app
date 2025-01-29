@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/java:17.2024.11.22.15
+FROM amazoncorretto:17.0.7-alpine
 
 WORKDIR /app
 
