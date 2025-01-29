@@ -29,14 +29,6 @@ pipeline {
             }
         }
 
-        stage('Checkout Code') {
-            steps {
-                script {
-                    sh './jenkins/scripts/checkout.sh'
-                }
-            }
-        }
-
         stage('Login to ECR') {
             steps {
                 script {
