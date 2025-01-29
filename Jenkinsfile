@@ -11,6 +11,14 @@ pipeline {
     }
 
     stages {
+        stage('Setup Permissions') {
+            steps {
+                script {
+                    sh 'chmod +x ./jenkins/scripts/*.sh'
+                }
+            }
+        }
+
         stage('Set Image Tag') {
             steps {
                 script {
