@@ -1,4 +1,4 @@
-FROM openjdk:17-slim
+FROM public.ecr.aws/lambda/java:17.2024.11.22.15
 
 WORKDIR /app
 
