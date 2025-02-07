@@ -42,7 +42,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    sh 'scripts/run_tests.sh'
+                    sh './jenkins/scripts/run_tests.sh'
                 }
             }
         }
@@ -90,7 +90,7 @@ pipeline {
         stage('Save Maven Cache') {
             steps {
                 script {
-                    sh 'scripts/save_maven_cache.sh'
+                    sh './jenkins/scripts/save_maven_cache.sh'
                 }
             }
         }
