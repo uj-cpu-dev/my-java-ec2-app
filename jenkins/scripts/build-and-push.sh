@@ -20,9 +20,8 @@ docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/$REPO_NA
 # Check if Trivy is installed, else install it
 if ! command -v trivy &> /dev/null; then
     echo "Trivy not found. Installing..."
-    sudo dnf install -y yum-utils
-    sudo yum-config-manager --add-repo https://aquasecurity.github.io/trivy-repo/rpm/stable/trivy.repo
-    sudo dnf install -y trivy
+    # Download and install Trivy binary
+    curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
 fi
 
 # Scan image for vulnerabilities
