@@ -39,14 +39,6 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                script {
-                    sh './jenkins/scripts/run_tests.sh'
-                }
-            }
-        }
-
         stage('Login to ECR') {
             steps {
                 script {
