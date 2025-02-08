@@ -1,6 +1,47 @@
 #!/bin/bash
 set -e
 
+# Function to install Trivy
+install_trivy() {
+    echo "Installing Trivy..."
+
+    # Step 1: Get the latest Trivy version
+    TRIVY_VERSION=$(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+    echo "Latest Trivy version: $TRIVY_VERSION"
+
+    # Step 2: Download the Trivy binary
+    echo "Downloading Trivy binary..."
+    curl -LO https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
+
+    # Step 3: Extract the binary
+    echo "Extracting Trivy binary..."
+    tar -xzf trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
+
+    # Step 4: Move the binary to /usr/local/bin
+    echo "Moving Trivy binary to /usr/local/bin..."
+    sudo mv trivy /usr/local/bin/
+
+    # Step 5: Clean up
+    echo "Cleaning up..."
+    rm trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
+
+    # Step 6: Verify the installation
+    echo "Verifying Trivy installation..."
+    trivy --version
+
+    if [ $? -eq 0 ]; then
+        echo "Trivy installed successfully."
+    else
+        echo "Failed to install Trivy."
+        exit 1
+    fi
+}
+
+# Check if Trivy is installed, else install it
+if ! command -v trivy &> /dev/null; then
+    install_trivy
+fi
+
 echo "Building Docker image..."
 IMAGE_TAG=$(cat image-tag.txt)
 
@@ -16,13 +57,6 @@ fi
 
 # Build multi-platform image
 docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG --push .
-
-# Check if Trivy is installed, else install it
-if ! command -v trivy &> /dev/null; then
-    echo "Trivy not found. Installing..."
-    # Download and install Trivy binary
-    curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-fi
 
 # Scan image for vulnerabilities
 echo "Scanning Docker image for vulnerabilities..."
