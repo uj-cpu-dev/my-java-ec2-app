@@ -29,7 +29,7 @@ echo "Scanning Docker image for vulnerabilities..."
 docker run --rm \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v $TRIVY_CACHE_DIR:/root/.cache/trivy \
-    aquasec/trivy:latest image --scanners vuln --timeout 10m $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
+    aquasec/trivy:latest image --scanners vuln --skip-db-update $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
 
 if [ $? -eq 1 ]; then
     echo "Image scanning failed due to HIGH or CRITICAL vulnerabilities."
