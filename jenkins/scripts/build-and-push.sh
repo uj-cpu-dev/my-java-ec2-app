@@ -60,9 +60,14 @@ docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/$REPO_NA
 
 # Scan image for vulnerabilities
 echo "Scanning Docker image for vulnerabilities..."
-export TRIVY_CACHE_DIR=/tmp/trivy
+export TRIVY_CACHE_DIR=/var/lib/jenkins/trivy-cache
 mkdir -p $TRIVY_CACHE_DIR
-trivy image --scanners vuln --cache-dir $TRIVY_CACHE_DIR --timeout 5m $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
+
+# Update DB first
+trivy --cache-dir $TRIVY_CACHE_DIR image --download-db-only
+
+# Scan the image without updating the DB
+trivy image --scanners vuln --skip-db-update --cache-dir $TRIVY_CACHE_DIR --no-progress --timeout 5m $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
 
 if [ $? -eq 1 ]; then
     echo "Image scanning failed due to HIGH or CRITICAL vulnerabilities."
