@@ -8,7 +8,7 @@ mkdir -p $TRIVY_CACHE_DIR
 # Ensure Trivy database exists before scanning
 if [ ! -f "$TRIVY_CACHE_DIR/db/trivy.db" ]; then
     echo "Trivy database not found. Downloading..."
-    docker run --rm -v $TRIVY_CACHE_DIR:/root/.cache/trivy aquasec/trivy:latest image --download-db-only --db-repository ghcr.io/aquasecurity/trivy-db
+    trivy --cache-dir $TRIVY_CACHE_DIR --download-db-only
 fi
 
 echo "Building Docker image..."
@@ -29,10 +29,7 @@ docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/$REPO_NA
 
 # Scan image for vulnerabilities using pre-downloaded DB
 echo "Scanning Docker image for vulnerabilities..."
-docker run --rm \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v $TRIVY_CACHE_DIR:/root/.cache/trivy \
-    aquasec/trivy:latest image --scanners vuln --skip-db-update $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
+trivy --cache-dir $TRIVY_CACHE_DIR --skip-db-update image --scanners vuln $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
 
 if [ $? -eq 1 ]; then
     echo "Image scanning failed due to HIGH or CRITICAL vulnerabilities."
