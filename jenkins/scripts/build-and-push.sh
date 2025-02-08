@@ -60,7 +60,7 @@ docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/$REPO_NA
 
 # Scan image for vulnerabilities
 echo "Scanning Docker image for vulnerabilities..."
-trivy image --exit-code 1 --severity HIGH,CRITICAL $REPO_NAME:$IMAGE_TAG
+trivy image --exit-code 1 --severity HIGH,CRITICAL $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
 
 if [ $? -eq 1 ]; then
     echo "Image scanning failed due to HIGH or CRITICAL vulnerabilities."
@@ -68,7 +68,7 @@ if [ $? -eq 1 ]; then
 fi
 
 # Get image size in MB
-IMAGE_SIZE=$(docker image inspect $REPO_NAME:$IMAGE_TAG --format='{{.Size}}')
+IMAGE_SIZE=$(docker image inspect $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG --format='{{.Size}}')
 IMAGE_SIZE_MB=$((IMAGE_SIZE / 1024 / 1024))
 
 echo "Docker image size: ${IMAGE_SIZE_MB}MB"
