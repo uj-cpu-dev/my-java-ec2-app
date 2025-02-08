@@ -5,8 +5,11 @@ set -e
 export TRIVY_CACHE_DIR=/tmp/trivy-cache
 mkdir -p $TRIVY_CACHE_DIR
 
-# Pre-download the vulnerability database (in the background)
-(docker run --rm -v $TRIVY_CACHE_DIR:/root/.cache/trivy aquasec/trivy:latest --update --only-db) &
+# Ensure Trivy database exists before scanning
+if [ ! -f "$TRIVY_CACHE_DIR/db/trivy.db" ]; then
+    echo "Trivy database not found. Downloading..."
+    docker run --rm -v $TRIVY_CACHE_DIR:/root/.cache/trivy aquasec/trivy:latest --update --only-db
+fi
 
 echo "Building Docker image..."
 IMAGE_TAG=$(cat image-tag.txt)
