@@ -1,10 +1,14 @@
 #!/bin/bash
 set -e
 
+# Set Trivy cache directory
+export TRIVY_CACHE_DIR=/usr/local/share/trivy
+mkdir -p $TRIVY_CACHE_DIR
+
 echo "Building Docker image..."
 IMAGE_TAG=$(cat image-tag.txt)
 
-# Enable experimental feature for multi-platform builds if using Docker BuildKit
+# Enable Docker BuildKit
 export DOCKER_CLI_EXPERIMENTAL=enabled
 export DOCKER_BUILDKIT=1
 
@@ -17,9 +21,12 @@ fi
 # Build multi-platform image
 docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG --push .
 
-# Scan image for vulnerabilities using pre-downloaded DB
+# Scan image for vulnerabilities using Trivy
 echo "Scanning Docker image for vulnerabilities..."
-docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image --severity HIGH,CRITICAL $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
+docker run --rm \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v $TRIVY_CACHE_DIR:/root/.cache/trivy \
+    aquasec/trivy:latest image --severity HIGH,CRITICAL $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
 
 if [ $? -eq 1 ]; then
     echo "Image scanning failed due to HIGH or CRITICAL vulnerabilities."
@@ -27,7 +34,7 @@ if [ $? -eq 1 ]; then
 fi
 
 # Get image size in MB
-IMAGE_SIZE=$(docker image inspect $REPO_NAME:$IMAGE_TAG --format='{{.Size}}')
+IMAGE_SIZE=$(docker image inspect $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG --format='{{.Size}}')
 IMAGE_SIZE_MB=$((IMAGE_SIZE / 1024 / 1024))
 
 echo "Docker image size: ${IMAGE_SIZE_MB}MB"
