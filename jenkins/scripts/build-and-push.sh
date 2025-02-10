@@ -15,7 +15,7 @@ if ! docker buildx ls | grep -q "multi-platform-builder"; then
 fi
 
 # Build multi-platform image
-docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG --push .
+docker buildx build --platform linux/arm64 -t $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG --push .
 
 # Scan image for vulnerabilities using Trivy
 echo "Scanning Docker image for vulnerabilities..."
