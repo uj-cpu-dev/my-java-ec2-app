@@ -21,6 +21,14 @@ pipeline {
             }
         }
 
+        stage('Run Maven Build and Tests') {
+            steps {
+                script {
+                    sh './jenkins/scripts/run-maven-build-and-tests.sh'
+                }
+            }
+        }
+
         stage('Set Image Tag') {
             steps {
                 script {
