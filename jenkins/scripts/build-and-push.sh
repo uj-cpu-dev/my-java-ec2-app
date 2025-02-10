@@ -17,6 +17,10 @@ fi
 # Build multi-platform image
 docker buildx build --platform linux/amd64 -t $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG --push .
 
+# Pull the image from ECR for scanning
+echo "Pulling Docker image from ECR..."
+docker pull $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
+
 # Get image size in MB
 IMAGE_SIZE=$(docker image inspect $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG --format='{{.Size}}')
 IMAGE_SIZE_MB=$((IMAGE_SIZE / 1024 / 1024))
