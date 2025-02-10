@@ -8,7 +8,6 @@ pipeline {
         CLUSTER_NAME = 'serious-folk-outfit'
         NAMESPACE = 'default'
         IMAGE_TAG = ''
-        MAVEN_CACHE_DIR = '/var/lib/jenkins/.m2/repository'
         KUBECONFIG = "/var/lib/jenkins/.kube/config"
     }
 
@@ -21,28 +20,12 @@ pipeline {
             }
         }
 
-        stage('Run Maven Build and Tests') {
-            steps {
-                script {
-                    sh './jenkins/scripts/run-maven-build-and-tests.sh'
-                }
-            }
-        }
-
         stage('Set Image Tag') {
             steps {
                 script {
                     sh './jenkins/scripts/set-image-tag.sh'
                     env.IMAGE_TAG = readFile('image-tag.txt').trim()
                     echo "Image tag set to: ${env.IMAGE_TAG}"
-                }
-            }
-        }
-
-        stage('Restore Maven Cache') {
-            steps {
-                script {
-                    sh './jenkins/scripts/restore_maven_cache.sh'
                 }
             }
         }
@@ -83,14 +66,6 @@ pipeline {
             steps {
                 script {
                     sh './jenkins/scripts/health-check.sh'
-                }
-            }
-        }
-
-        stage('Save Maven Cache') {
-            steps {
-                script {
-                    sh './jenkins/scripts/save_maven_cache.sh'
                 }
             }
         }
