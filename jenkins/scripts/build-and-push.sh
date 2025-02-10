@@ -29,19 +29,13 @@ if ! docker buildx ls | grep -q "multi-platform-builder"; then
     docker buildx create --name multi-platform-builder --use
 fi
 
-# Build and push multi-platform image (default)
-echo "📦 Building multi-platform Docker image (amd64 & arm64)..."
-docker buildx build --platform linux/amd64,linux/arm64 -t "$ECR_IMAGE" --push .
+# Build and push single-platform image
+echo "📦 Building Docker image for $PLATFORM..."
+docker buildx build --platform "$PLATFORM" -t "$ECR_IMAGE" --push .
 
 # Verify the built image manifest
 echo "🔍 Verifying built image manifest..."
 docker manifest inspect "$ECR_IMAGE" | jq '.manifests[].platform'
-
-# OPTIONAL: Pull the correct architecture image (if needed for scanning)
-if [ "$PULL_AFTER_BUILD" = "true" ]; then
-    echo "📥 Pulling Docker image for $PLATFORM..."
-    docker pull --platform "$PLATFORM" "$ECR_IMAGE"
-fi
 
 # Get image size in MB
 IMAGE_SIZE=$(docker image inspect "$ECR_IMAGE" --format='{{.Size}}')
