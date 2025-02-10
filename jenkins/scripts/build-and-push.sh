@@ -1,10 +1,6 @@
 #!/bin/bash
 set -e
 
-# Set Trivy cache directory
-export TRIVY_CACHE_DIR=/usr/local/share/trivy
-mkdir -p $TRIVY_CACHE_DIR
-
 echo "Building Docker image..."
 IMAGE_TAG=$(cat image-tag.txt)
 
@@ -23,10 +19,7 @@ docker buildx build --platform linux/amd64,linux/arm64 -t $ECR_REGISTRY/$REPO_NA
 
 # Scan image for vulnerabilities using Trivy
 echo "Scanning Docker image for vulnerabilities..."
-docker run --rm \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v $TRIVY_CACHE_DIR:/root/.cache/trivy \
-    aquasec/trivy:latest image --severity HIGH,CRITICAL $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image --severity HIGH,CRITICAL $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
 
 if [ $? -eq 1 ]; then
     echo "Image scanning failed due to HIGH or CRITICAL vulnerabilities."
