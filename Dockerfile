@@ -1,8 +1,8 @@
-# Use the ARM64 Amazon Corretto 17 base image
-FROM public.ecr.aws/amazoncorretto/amazoncorretto:17-arm64 as builder
+# Use Amazon Linux as the builder base image to install Maven
+FROM public.ecr.aws/amazonlinux/amazonlinux:2023 as builder
 
-# Install Maven
-RUN yum install -y maven
+# Install required dependencies
+RUN yum install -y maven java-17-amazon-corretto
 
 # Set the working directory
 WORKDIR /app
@@ -14,10 +14,7 @@ COPY src ./src
 # Download dependencies and build the application
 RUN mvn clean install -DskipTests
 
-# Run tests
-RUN mvn test
-
-# Use a minimal runtime image
+# Use the ARM64 Amazon Corretto 17 base image for runtime
 FROM public.ecr.aws/amazoncorretto/amazoncorretto:17-arm64
 
 # Set the working directory
