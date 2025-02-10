@@ -17,9 +17,13 @@ fi
 # Build multi-platform image
 docker buildx build --platform linux/arm64 -t $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG --push .
 
-# Scan image for vulnerabilities using Trivy (directly from ECR)
+# Pull the image from ECR for scanning
+echo "Pulling Docker image from ECR..."
+docker pull $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
+
+# Scan image for vulnerabilities using Trivy
 echo "Scanning Docker image for vulnerabilities..."
-docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image --severity HIGH,CRITICAL --remote $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image --severity HIGH,CRITICAL $ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG
 
 if [ $? -eq 1 ]; then
     echo "Image scanning failed due to HIGH or CRITICAL vulnerabilities."
