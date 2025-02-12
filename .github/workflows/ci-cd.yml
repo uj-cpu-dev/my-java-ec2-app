@@ -9,6 +9,7 @@ env:
   AWS_REGION: us-east-1
   EKS_CLUSTER: thoughtful-dubstep-hideout
   ECR_REPO: my-java-app
+  ECR_REGISTRY: 992382383822.dkr.ecr.us-east-1.amazonaws.com
   IMAGE_TAG: ${{ github.sha }}
   APP_NAME: my-app
   NAMESPACE: default
@@ -49,8 +50,8 @@ jobs:
       - name: Authenticate to AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::992382383822:role/github-actions-runner
-          aws-region: us-east-1
+          role-to-assume: ${{ env.IAM_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
           audience: sts.amazonaws.com
 
       - name: Login to ECR
@@ -79,6 +80,7 @@ jobs:
         with:
           role-to-assume: ${{ env.IAM_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
+          audience: sts.amazonaws.com
 
       - name: Update kubeconfig
         run: |
