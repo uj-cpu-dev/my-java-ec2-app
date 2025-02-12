@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e  # Exit on error
 
-echo "🚀 Building Docker image..."
 IMAGE_TAG=$(cat image-tag.txt)
 ECR_IMAGE="$ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG"
 
