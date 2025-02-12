@@ -64,7 +64,9 @@ jobs:
 
       - name: Scan Image with Trivy
         run: |
-          docker run --rm aquasec/trivy image --severity HIGH,CRITICAL $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
+          docker run --rm --network host \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy image --severity HIGH,CRITICAL $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
 
       - name: Push Docker Image to ECR
         run: |
