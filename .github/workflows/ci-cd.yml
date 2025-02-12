@@ -90,7 +90,7 @@ jobs:
 
       - name: Deploy with Helm
         run: |
-          helm upgrade --install $APP_NAME my-app/ \
+          helm upgrade --install $APP_NAME ./my-app \
             --namespace $NAMESPACE \
             --set image.repository=$ECR_REGISTRY/$ECR_REPO \
             --set image.tag=$IMAGE_TAG \
