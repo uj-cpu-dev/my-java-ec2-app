@@ -12,7 +12,7 @@ env:
   IMAGE_TAG: ${{ github.sha }}
   APP_NAME: my-app
   NAMESPACE: default
-  IAM_ROLE_ARN: arn:aws:iam::992382383822:role/EC2InstanceProfile  # Move IAM Role to env
+  IAM_ROLE_ARN: arn:aws:iam::992382383822:role/github-actions-runner  # Move IAM Role to env
 
 permissions:
   id-token: write
