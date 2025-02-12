@@ -14,6 +14,10 @@ env:
   NAMESPACE: default
   IAM_ROLE_ARN: arn:aws:iam::992382383822:role/EC2InstanceProfile  # Move IAM Role to env
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   test:
     name: Run Tests & Build
