@@ -143,13 +143,11 @@ jobs:
 
       - name: Verify Prometheus Metrics
         run: |
-          # Get the Prometheus service URL
-          PROMETHEUS_URL="http://$(kubectl get svc prometheus-kube-prometheus-prometheus -n monitoring -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'):9090/metrics"
+          PROMETHEUS_URL="http://prometheus.example.com/metrics"
           echo "Checking Prometheus Metrics at $PROMETHEUS_URL"
           curl -s $PROMETHEUS_URL | grep -E "http_requests_total|memory_usage"
         
       - name: Verify Grafana Dashboard
         run: |
-          # Get the Grafana service URL
-          GRAFANA_URL="http://$(kubectl get svc prometheus-grafana -n monitoring -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'):80"
+          GRAFANA_URL="http://grafana.example.com"
           echo "Grafana Dashboard available at: $GRAFANA_URL"
