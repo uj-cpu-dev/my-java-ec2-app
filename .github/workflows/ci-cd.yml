@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  EKS_CLUSTER: thoughtful-dubstep-hideout
+  EKS_CLUSTER: confused-disco-duck
   ECR_REPO: my-java-app
   ECR_REGISTRY: 992382383822.dkr.ecr.us-east-1.amazonaws.com
   IMAGE_TAG: ${{ github.sha }}
@@ -143,11 +143,11 @@ jobs:
 
       - name: Verify Prometheus Metrics
         run: |
-          PROMETHEUS_URL="http://prometheus.example.com/metrics"
+          PROMETHEUS_URL="http://aeb56c824c1d644d49e6f104006b9b41-930982718.us-east-1.elb.amazonaws.com:9090/metrics"
           echo "Checking Prometheus Metrics at $PROMETHEUS_URL"
           curl -s $PROMETHEUS_URL | grep -E "http_requests_total|memory_usage"
         
       - name: Verify Grafana Dashboard
         run: |
-          GRAFANA_URL="http://grafana.example.com"
+          GRAFANA_URL="http://aa59e20a2c90d4d8384527b97e8073d7-243026618.us-east-1.elb.amazonaws.com:80"
           echo "Grafana Dashboard available at: $GRAFANA_URL"
